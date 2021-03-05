@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path');
 const app = express()
+require("dotenv").config();
 const mysql = require('mysql');
 const cors = require('cors');
 
@@ -12,6 +13,14 @@ const db = mysql.createConnection({
   host: process.env.DB_HOST,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DB
+});
+
+db.connect(function(err) {
+    if (err) {
+        return console.error('error: ' + err.message);
+    }
+
+    console.log('Connected to the MySQL server.');
 });
 
 app.post('/posts', (req, res) => {
