@@ -6,7 +6,7 @@ const App = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        axios.post('/posts')
+        axios.post('localhost:3030/posts')
         .then(res => {
             setData(res.data)
         })
