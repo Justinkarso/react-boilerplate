@@ -16,6 +16,7 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.13",
     "@babel/preset-react": "^7.12.13",
+    "axios": "^0.21.1",
     "babel-loader": "^8.2.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
