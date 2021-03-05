@@ -21,6 +21,14 @@ db.connect(function(err) {
     }
 
     console.log('Connected to the MySQL server.');
+    db.query('SELECT * FROM designs', (err, result) => {
+        if(err){
+            console.log(err)
+        } else {
+            console.log(result)
+        }
+    })
+
 });
 
 app.post('/posts', (req, res) => {

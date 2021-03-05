@@ -6,10 +6,22 @@ const App = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        axios.post('localhost:3030/posts')
-        .then(res => {
-            setData(res.data)
+       fetch('/posts', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
         })
+        .then(response => response.json())
+	.then(data => {
+		console.log(data)
+	})
+ 	.catch(err => {
+		console.log(err)
+	})
+
     }, [])
 
     return (
@@ -23,6 +35,7 @@ const App = () => {
                         </div>
                     )
                 })}
+                {!data && <div> loading... </div>}
             </div>
         </div>
     )
