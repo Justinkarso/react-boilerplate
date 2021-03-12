@@ -15,28 +15,35 @@ const db = mysql.createConnection({
   database: process.env.DB_DB
 });
 
-db.connect(function(err) {
-    if (err) {
-        return console.error('error: ' + err.message);
-    }
+app.post('/blogs', (req, res) => {
+    const value = req.body.value
+    let buff = Buffer.from(value);
+    let data = buff.toString('base64');
 
-    console.log('Connected to the MySQL server.');
-    db.query('SELECT * FROM designs', (err, result) => {
-        if(err){
+    db.query('INSERT INTO Blogs (data) VALUES (?)', [data], (err, result) => {
+        if(err) {
             console.log(err)
         } else {
             console.log(result)
         }
     })
+})
 
-});
-
-app.post('/posts', (req, res) => {
-    db.query('SELECT * FROM designs', (err, result ) => {
-        if (err) {
+app.post('/get-blogs', (req, res) => {
+    let arr = []
+    db.query("SELECT * FROM Blogs", (err, result) => {
+        try{
+            console.log(arr)
+            for(let i=0; i < result.length; i++){
+                let decode = Buffer.from(result[i].data, 'base64').toString('ascii')
+                console.log(decode)
+                let newArr = [...arr, decode]
+                arr = newArr
+            }
+            console.log(arr)
+            res.status(200).json({ data: arr })
+        } catch (err) {
             console.log(err)
-        } else {
-            res.send(result)
         }
     })
 })

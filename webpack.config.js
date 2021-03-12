@@ -3,7 +3,7 @@ const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development
 
 module.exports = {
     mode: mode,
-    entry: path.resolve(__dirname, 'src'),
+    entry: ['@babel/polyfill', './src/index.js'],
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
@@ -16,7 +16,11 @@ module.exports = {
                 use: {
                     loader: 'babel-loader'
                 }
-            }
+            },
+            {
+              test: /\.css$/i,
+              use: ["style-loader", "css-loader"],
+            },
         ]
     },
     devtool: 'source-map',

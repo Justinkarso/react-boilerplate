@@ -1,43 +1,45 @@
 import React, { useEffect, useState } from 'react'
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import axios from 'axios'
-
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+ 
 
 const App = () => {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState([])
+    const [value, setValue] = useState('');
 
     useEffect(() => {
-       fetch('/posts', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
+        axios.post('/get-blogs')
+        .then(res => {
+            setData(...data, res.data.data)
         })
-        .then(response => response.json())
-	.then(data => {
-		console.log(data)
-	})
- 	.catch(err => {
-		console.log(err)
-	})
-
     }, [])
 
+    const handleClick = () => {
+
+        fetch('/blogs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ value })
+        })
+    }
+
     return (
-        <div>
-            <h1>Hello World</h1>
-            <div>
-                {data && data.map(item => {
-                    return(
-                        <div key={item.id}>
-                            <p>{item.title}</p>
-                        </div>
-                    )
-                })}
-                {!data && <div> loading... </div>}
-            </div>
+        <>
+        <div style={{ width: '750px'}}>
+            <ReactQuill theme="snow" value={value} onChange={setValue}/>
+            <button onClick={handleClick}>Submit Blog</button>
         </div>
+        <div className="list">
+            {data && data.map((blog, i) => (
+                <div key={i}>
+                    <div>{ ReactHtmlParser(blog) }</div>
+                </div>
+            ))}
+            {!data && <div>Loading...</div>}
+        </div>
+        </>
     )
 }
 
