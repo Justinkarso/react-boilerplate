@@ -15,38 +15,6 @@ const db = mysql.createConnection({
   database: process.env.DB_DB
 });
 
-app.post('/blogs', (req, res) => {
-    const value = req.body.value
-    let buff = Buffer.from(value);
-    let data = buff.toString('base64');
-
-    db.query('INSERT INTO Blogs (data) VALUES (?)', [data], (err, result) => {
-        if(err) {
-            console.log(err)
-        } else {
-            console.log(result)
-        }
-    })
-})
-
-app.post('/get-blogs', (req, res) => {
-    let arr = []
-    db.query("SELECT * FROM Blogs", (err, result) => {
-        try{
-            console.log(arr)
-            for(let i=0; i < result.length; i++){
-                let decode = Buffer.from(result[i].data, 'base64').toString('ascii')
-                console.log(decode)
-                let newArr = [...arr, decode]
-                arr = newArr
-            }
-            console.log(arr)
-            res.status(200).json({ data: arr })
-        } catch (err) {
-            console.log(err)
-        }
-    })
-})
 
 app.use(express.static('dist'))
 app.get('/', (req, res) => {
